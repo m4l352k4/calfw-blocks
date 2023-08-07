@@ -81,14 +81,20 @@ Modus Vivendi's colors for graphs."
   :type 'list)
 
 (defcustom calfw-blocks-display-end-times t
-  "Whether or not to display end times in blocks.")
+  "Whether or not to display end times in blocks."
+  :group 'calfw-blocks
+  :type 'boolean)
 
 (defcustom calfw-blocks-transpose-date-width 17
-  "Width (in characters) of date cell in transpose views.")
+  "Width (in characters) of date cell in transpose views."
+  :group 'calfw-blocks
+  :type 'number)
 
 (defcustom calfw-blocks-transpose-day-name-length nil
   "Number of characters of day of week to display in transpose views.
-Displays full name if nil.")
+Displays full name if nil."
+  :group 'calfw-blocks
+  :type 'number)
 
 (defface calfw-blocks-overline
   '((t :overline t))
@@ -340,8 +346,9 @@ return an alist of rendering parameters."
               "")))))
 
 (defun calfw-blocks-render-columns-transpose (day-columns param)
-  "[internal] This function concatenates each rows on the days into a string of a physical line.
-DAY-COLUMNS is a list of columns. A column is a list of following form: (DATE (DAY-TITLE . ANNOTATION-TITLE) STRING STRING...)."
+  "[internal] For each row, concatenates columns into a string, physical line.
+DAY-COLUMNS is a list of columns. A column is a list of following
+form: (DATE (DAY-TITLE . ANNOTATION-TITLE) STRING STRING...)."
   (let* ((date-cell-width  (cfw:k 'date-cell-width  param))
          (cell-width  (cfw:k 'cell-width  param))
          (cell-height (cfw:k 'cell-height param))
@@ -1483,9 +1490,9 @@ If TEXT does not have a range, return nil."
     ;;; act for org link
     ;;; ------------------------------------------------------------------------
     (setq text (replace-regexp-in-string "%[0-9A-F]\\{2\\}" " " text))
-    (if (string-match org-bracket-link-regexp text)
-      (let* ((desc (if (match-end 3) (org-match-string-no-properties 3 text)))
-             (link (org-link-unescape (org-match-string-no-properties 1 text)))
+    (if (string-match org-link-bracket-re text)
+      (let* ((desc (if (match-end 3) (match-string-no-properties 3 text)))
+             (link (org-link-unescape (match-string-no-properties 1 text)))
              (help (concat "LINK: " link))
              (link-props (list
                           'face 'org-link
